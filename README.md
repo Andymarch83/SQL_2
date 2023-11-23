@@ -25,3 +25,125 @@
 - Использование оператора CASE и функции IF()
 
 
+#### 1. Создать таблицу sales с тремя столбцами: id, order_date (дата заказа) и count_product (количество продуктов в заказе). Затем заполнить эту таблицу данными, включая информацию о дате заказа и количестве продуктов в каждом заказе. Названия столбцов: order_date, count_product. Заполните ее данными.
+
+-- Создание таблицы "sales"
+
+DROP TABLE IF EXISTS {schema_name}.sales;
+
+CREATE TABLE {schema_name}.sales (
+
+ id SERIAL PRIMARY KEY,
+ 
+ order_date DATE,
+ 
+ count_product INT
+ 
+);
+
+-- Заполнение данными таблицы sales
+
+INSERT INTO {schema_name}.sales (order_date, count_product)
+
+VALUES 
+
+('2022-01-01', 156),
+
+('2022-01-02', 180),
+
+('2022-01-03', 21),
+
+('2022-01-04', 124),
+
+('2022-01-05', 341);
+
+
+#### 2. Для данных таблицы sales укажите тип заказа в зависимости от кол-ва :
+
+меньше 100 - Маленький заказ,
+
+от 100 до 300 - Средний заказ,
+
+больше 300 - Большой заказ.
+
+Выведите таблицу с названиями столбцов Номер заказа, Количество продукта, Тип
+
+SELECT
+
+  id AS "Номер заказа",
+  
+  count_product AS "Количество продукта",
+  
+  CASE
+  
+    WHEN count_product < 100 THEN 'Маленький заказ'
+    
+    WHEN count_product BETWEEN 100 AND 300 THEN 'Средний заказ'
+    
+    WHEN count_product > 300 THEN 'Большой заказ'
+    
+    ELSE 'Не определено'
+    
+  END AS "Тип"
+  
+FROM sales;
+
+#### 3. Используя операторы языка SQL, создайте таблицу orders, заполните ее значениями. Названия столбцов: employee_id, amount, order_status.
+
+-- Создание таблицы "orders"
+
+DROP TABLE IF EXISTS {schema_name}.orders;
+
+CREATE TABLE {schema_name}.orders (
+
+ id SERIAL PRIMARY KEY, 
+ 
+ employee_id VARCHAR(10),
+ 
+ amount NUMERIC(5,2),
+ 
+ order_status VARCHAR(10) CHECK (order_status IN ('OPEN', 'CLOSED', 'CANCELLED'))
+ 
+);
+
+-- Заполнение значениями таблицы "orders"
+
+INSERT INTO {schema_name}.orders (employee_id, amount, order_status)
+
+VALUES
+
+('e03', '15.00', 'OPEN'),
+
+('e01', '25.50', 'OPEN'),
+
+('e05', '100.70', 'CLOSED'),
+
+('e02', '22.18', 'OPEN'),
+
+('e04', '9.50', 'CANCELLED'); 
+
+
+#### 4. Выбрать данные из таблицыorders и вывести столбцы id, employee_id, amount, и order_status с дополнительным столбцом full_order_status, который содержит описание статуса заказа на основе значения столбца 'order_status'.
+
+SELECT id, employee_id, amount, order_status,
+
+    CASE order_status 
+    
+        WHEN 'OPEN' THEN 'Order is in open state'
+        
+        WHEN 'CLOSED' THEN 'Order is closed'
+        
+        WHEN 'CANCELLED' THEN 'Order is cancelled'
+        
+        ELSE 'Not mentioned'
+        
+    END AS full_order_status 
+    
+FROM orders;
+
+
+
+
+
+
+
